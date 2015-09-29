@@ -1,4 +1,5 @@
 import Util
+from time import *
 
 
 lista_logs = []
@@ -19,7 +20,8 @@ def criar_arquivo_log():
     output_file = ""
     file_name = ""
     #Geracao do conteudo e apenas um for que ira inserir os numericos
-    for i in range(0, 10000000):
+    for i in range(0, 1000):
+        sleep(1)
         output_file += str(i)
 
     #Gravacao do arquivo de log no diretorio padrao 'outputs'

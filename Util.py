@@ -4,6 +4,9 @@ from os import listdir
 from os.path import isfile, join
 
 
+local_files_path = "./outputs/"
+
+
 #Funcao para fazer a escrita de um arquivo
 def write_file(path, message):
     file = open(path, "w")
@@ -25,3 +28,11 @@ def get_local_ip():
 def get_files_in_directory(path):
     files = [f for f in listdir(path) if isfile(join(path, f))]
     return files
+
+
+#Funcao que faz a leitura do conteudo de um arquivo
+def scanFile(path):
+    file = open(path, 'r')
+    string = file.read()
+    file.close()
+    return string
