@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from time import *
 from socket import *
+import socket
+import time
 import thread
 BUFFER_SIZE = 1024
 
@@ -14,12 +16,13 @@ def listen():
 		print "Recebido %s %s " % (data, addr)
 		print addr[0]
 
+
 def server():
 	server = socket(AF_INET, SOCK_DGRAM)
 	server.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 	cont = 0
 	while True:
-		print "%s-%s-%s %s:%s:%s\tEnviando broadcast..." % localtime()[:6]
+		print "%s-%s-%s %s:%s:%s\tEnviando broadcast... " % localtime()[:6]
 		cont += 1
 		data = repr(time()) + " cont: " + str(cont) + '\n'
 		server.sendto(data, ('<broadcast>', 50000))
@@ -28,38 +31,59 @@ def server():
 def server_files_list_request(TCP_IP, PORT_IP):
 
 	cmd = "get_file_list"
-    message = ("cmd", cmd)
-    #Envio
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	message = ("cmd", cmd)
+	#Envio
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((TCP_IP, PORT_IP))
-    s.send(MESSAGE)
-    data = s.recv(BUFFER_SIZE)
-    s.close()
-    #return message
+	s.send(MESSAGE)
+	data = s.recv(BUFFER_SIZE)
+	s.close()
+	#return message
 
 #Mensagem 2
 def send_files_list(TCP_IP, PORT_IP):
-    cmd = "get_file_list"
-    message = [[], ("cmd", cmd)]
-    files = ""
+	cmd = "get_file_list"
+	message = [[], ("cmd", cmd)]
+	files = ""
 
-    for item in Util.get_files_in_directory(Util.local_files_path):
-        files += item + ";"
+	for item in Util.get_files_in_directory(Util.local_files_path):
+		files += item + ";"
 
-    message.append(("files", files))
-    
+	message.append(("files", files))
+
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((TCP_IP, PORT_IP))
-    s.send(MESSAGE)
-    data = s.recv(BUFFER_SIZE)
-    s.close()
+	s.send(MESSAGE)
+	data = s.recv(BUFFER_SIZE)
+	s.close()
+
+#Servidor Mensagem
+def server_listen(TCP_PORT, TCP_IP):
+
+	BUFFER_SIZE = 1024  # Normally 1024, but we want fast response
+
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.bind((TCP_IP, TCP_PORT))
+	s.listen(1)
+
+	conn, addr = s.accept()
+	print 'Connection address:', addr
+	while 1:
+	    data = conn.recv(BUFFER_SIZE)
+	    if not data: break
+	    print "received data:", data
+	    conn.send(data)  # echo
+	conn.close()
 
 
-try:
-	thread.start_new_thread(server, ())
-	thread.start_new_thread(listen, ())
-except:
-	print "Erro: não foi possível criar uma thread"
+#try:
+	#thread.start_new_thread(server, ())
+	#thread.start_new_thread(listen, ())
+
+#except:
+#	print "Erro: não foi possível criar uma thread"
 
 while True:
+	server_listen(60000, 'localhost')
+	send_files_list('localhost', 60000)
 	pass
