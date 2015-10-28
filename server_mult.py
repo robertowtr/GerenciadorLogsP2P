@@ -4,7 +4,8 @@ from time import *
 from socket import *
 import socket
 import time
-import thread
+import threading 	#Alterado este import
+import Util 		#Inserido este import
 BUFFER_SIZE = 1024
 
 def listen():
@@ -63,10 +64,12 @@ def server_listen(TCP_PORT, TCP_IP):
 	BUFFER_SIZE = 1024  # Normally 1024, but we want fast response
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.bind((TCP_IP, TCP_PORT))
+	print("Antes Bind")
+	s.bind(('', TCP_PORT))
 	s.listen(1)
-
+	print(s)
 	conn, addr = s.accept()
+	print("Sem ConexS")
 	print 'Connection address:', addr
 	while 1:
 	    data = conn.recv(BUFFER_SIZE)
@@ -75,15 +78,18 @@ def server_listen(TCP_PORT, TCP_IP):
 	    conn.send(data)  # echo
 	conn.close()
 
+#Observação utlizado método de Threading https://docs.python.org/2/library/threading.html#thread-objects
+# https://docs.python.org/2/library/threading.html
 
-#try:
-	#thread.start_new_thread(server, ())
-	#thread.start_new_thread(listen, ())
+try :
+	t = threading.Thread(name='listen', target=server_listen, args=  (60000, '10.0.0.101'))
+	t.start()
+	t.join()
 
-#except:
-#	print "Erro: não foi possível criar uma thread"
-
-while True:
-	server_listen(60000, 'localhost')
-	send_files_list('localhost', 60000)
-	pass
+	#thread.start_new_thread(server_listen, (60000, '10.0.0.101'))
+except:
+	print "Erro: não foi possível criar uma thread"
+	# while True:
+	# 	t.join()
+	# 	#send_files_list('10.0.0.102', 60000)
+	# 	pass
