@@ -82,7 +82,7 @@ def server_listen(TCP_PORT, TCP_IP):
 # https://docs.python.org/2/library/threading.html
 
 try :
-	t = threading.Thread(name='listen', target=server_listen, args=  (60000, '10.0.0.101'))
+	t = threading.Thread(name='listen', target=server_listen, args=  (300, '10.0.0.100'))
 	t.start()
 	t.join()
 
