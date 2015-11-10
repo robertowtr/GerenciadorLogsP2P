@@ -78,21 +78,23 @@ def server_listen(TCP_PORT, TCP_IP):
 	    conn.send(data)  # echo
 	conn.close()
 
-def define_mensagem(ValMensagem):
+#def define_mensagem(ValMensagem):
 	# valor = ValMensagem.split(';')
 	# opcao = valor[1] 
 	# 	case opcao == "get_file_list" send_files_list(TCP_IP, TCP_PORT) #Mensagem 1
 	# 	case opcao == "send_files_list" server_files_list_request(NomeArquivo)
-	Solicita Lista de Arquivos #Mensagem 1
-	Cliente Envia Lista de Arquivos
-	Solicita os Arquivos Necessários
-	Recebe Arquivos do Cliente	
+	# Solicita Lista de Arquivos #Mensagem 1
+	# Cliente Envia Lista de Arquivos
+	# Solicita os Arquivos Necessários
+	# Recebe Arquivos do Cliente	
 
+def get_ip():
+	return socket.gethostbyname(socket.gethostname())
 #Observação utlizado método de Threading https://docs.python.org/2/library/threading.html#thread-objects
 # https://docs.python.org/2/library/threading.html
 
 try :
-	t = threading.Thread(name='listen', target=server_listen, args=  (60000, '10.0.0.100'))
+	t = threading.Thread(name='listen', target=server_listen, args=  (60000, str(getip())))
 	t.start()
 	t.join()
 
