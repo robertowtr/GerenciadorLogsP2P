@@ -67,9 +67,8 @@ def server_listen(TCP_PORT, TCP_IP):
 	print("Antes Bind")
 	s.bind(('', TCP_PORT))
 	s.listen(1)
-	print(s)
+	#print(s)
 	conn, addr = s.accept()
-	print("Sem ConexS")
 	print 'Connection address:', addr
 	while 1:
 	    data = conn.recv(BUFFER_SIZE)
@@ -77,6 +76,8 @@ def server_listen(TCP_PORT, TCP_IP):
 	    print "received data:", data
 	    conn.send(data)  # echo
 	conn.close()
+	global state
+	state = "final"
 
 #def define_mensagem(ValMensagem):
 	# valor = ValMensagem.split(';')
@@ -89,14 +90,28 @@ def server_listen(TCP_PORT, TCP_IP):
 	# Recebe Arquivos do Cliente	
 
 def get_ip():
+	print "Funcao"
 	return socket.gethostbyname(socket.gethostname())
 #Observação utlizado método de Threading https://docs.python.org/2/library/threading.html#thread-objects
 # https://docs.python.org/2/library/threading.html
 
+
 try :
-	t = threading.Thread(name='listen', target=server_listen, args=  (60000, str(getip())))
-	t.start()
-	t.join()
+	iplocal = str(get_ip())
+	state = "inicial"
+	while  1:
+		print state
+		if state == "inicial":
+			t = threading.Thread(name='listen', target=server_listen, args=  (60000, iplocal))
+			t.start()
+			t.join()
+			print "Loop"
+		if state == "final":
+			break
+
+
+	#t.join() #Esta função faz que se aguarde o fim da Thread a omitindo ela executa automáticamente
+	print "FIM"
 
 
 	#thread.start_new_thread(server_listen, (60000, '10.0.0.101'))

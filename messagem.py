@@ -3,8 +3,8 @@
 import socket
 
 
-TCP_IP = '10.0.0.102'
-TCP_PORT = 300
+TCP_IP = '10.0.0.100'
+TCP_PORT = 60000
 BUFFER_SIZE = 1024
 MESSAGE = "Mensagaem De Texto"
 
