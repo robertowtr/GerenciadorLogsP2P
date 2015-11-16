@@ -54,7 +54,7 @@ def send_files_list(TCP_IP, PORT_IP):
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((TCP_IP, PORT_IP))
-	s.send(MESSAGE)
+	s.send(str(MESSAGE))
 	data = s.recv(BUFFER_SIZE)
 	s.close()
 
@@ -77,7 +77,7 @@ def server_listen(TCP_PORT, TCP_IP):
 	    conn.send(data)  # echo
 	conn.close()
 	global state
-	state = "final"
+	state = "inicial"
 
 #def define_mensagem(ValMensagem):
 	# valor = ValMensagem.split(';')
@@ -98,7 +98,7 @@ def get_ip():
 
 try :
 	iplocal = str(get_ip())
-	state = "inicial"
+	state = "sendlist"		#Variável state indica qual estado se encontra o programa
 	while  1:
 		print state
 		if state == "inicial":
@@ -106,6 +106,11 @@ try :
 			t.start()
 			t.join()
 			print "Loop"
+		if state == "sendlist":
+			t = threading.Thread(name='sendlist', target=send_files_list, args=  (60000, iplocal))
+			t.start()
+			t.join()
+
 		if state == "final":
 			break
 
