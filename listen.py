@@ -25,7 +25,7 @@ def server_listen(TCP_PORT, TCP_IP):
 	conn.close()
 
 
-TCP_IP = '10.0.0.100'
+TCP_IP = '10.0.0.101'
 TCP_PORT = 60000
 BUFFER_SIZE = 1024
 server_listen(TCP_PORT, TCP_IP)

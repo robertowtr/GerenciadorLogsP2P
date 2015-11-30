@@ -52,11 +52,15 @@ def send_files_list(TCP_IP, PORT_IP):
 
 	message.append(("files", files))
 
+	MESSAGE = str(message)
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.connect((TCP_IP, PORT_IP))
-	s.send(str(MESSAGE))
-	data = s.recv(BUFFER_SIZE)
+	s.send(MESSAGE)
+	#data = s.recv(BUFFER_SIZE)
 	s.close()
+
+	global state
+	state = "final"
 
 #Servidor Mensagem
 def server_listen(TCP_PORT, TCP_IP):
@@ -77,20 +81,11 @@ def server_listen(TCP_PORT, TCP_IP):
 	    conn.send(data)  # echo
 	conn.close()
 	global state
-	state = "inicial"
+	state = "sendlist"
 
-#def define_mensagem(ValMensagem):
-	# valor = ValMensagem.split(';')
-	# opcao = valor[1] 
-	# 	case opcao == "get_file_list" send_files_list(TCP_IP, TCP_PORT) #Mensagem 1
-	# 	case opcao == "send_files_list" server_files_list_request(NomeArquivo)
-	# Solicita Lista de Arquivos #Mensagem 1
-	# Cliente Envia Lista de Arquivos
-	# Solicita os Arquivos Necessários
-	# Recebe Arquivos do Cliente	
 
 def get_ip():
-	print "Funcao"
+	print "inicial"
 	return socket.gethostbyname(socket.gethostname())
 #Observação utlizado método de Threading https://docs.python.org/2/library/threading.html#thread-objects
 # https://docs.python.org/2/library/threading.html
@@ -98,7 +93,7 @@ def get_ip():
 
 try :
 	iplocal = str(get_ip())
-	state = "sendlist"		#Variável state indica qual estado se encontra o programa
+	state = "inicial"		#Variável state indica qual estado se encontra o programa
 	while  1:
 		print state
 		if state == "inicial":
@@ -107,9 +102,10 @@ try :
 			t.join()
 			print "Loop"
 		if state == "sendlist":
-			t = threading.Thread(name='sendlist', target=send_files_list, args=  (60000, iplocal))
+			t = threading.Thread(name='sendlist', target=send_files_list, args=  (60000, '10.0.0.102'))
 			t.start()
 			t.join()
+			print("Lista")
 
 		if state == "final":
 			break
