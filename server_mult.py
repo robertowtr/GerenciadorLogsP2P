@@ -6,6 +6,8 @@ import socket
 import time
 import threading 	#Alterado este import
 import Util 		#Inserido este import
+import binascii		#Encode para Texto
+
 BUFFER_SIZE = 1024
 
 def listen():
@@ -116,6 +118,25 @@ def get_ip():
 	return socket.gethostbyname(socket.gethostname())
 #Observação utlizado método de Threading https://docs.python.org/2/library/threading.html#thread-objects
 # https://docs.python.org/2/library/threading.html
+
+def input_file(nome_arq):
+  with open(nome_arq, "rb") as f:
+    byte = f.read()
+  return byte
+
+def output_file(out_info, out_name):
+  arq_out = open(out_name, "wb+")
+  arq_out.write(out_info)
+  arq_out.close()
+
+ def encode_file(nome_arq):
+ 	datainput = binascii.rlecode_hqx(input_file(nome_arq))
+ 	return datainput
+
+ def decode_file(nome_arq):
+ 	dataoutput = binascii.rledecode_hqx(output_file(nome_arq))
+ 	return dataoutput
+
 
 
 try :
