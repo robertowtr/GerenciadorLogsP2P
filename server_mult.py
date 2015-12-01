@@ -33,12 +33,38 @@ def server_files_list_request(TCP_IP, PORT_IP):
 
 	cmd = "get_file_list"
 	message = ("cmd", cmd)
+
+	print("Request")
+	global data_teste
+	msg = data_teste
+
+	received_files = msg.split(",")
+	received_files = received_files[-1].split(';')
+
+	local_files = ""
+	str_final = ""
+
+	for item in Util.get_files_in_directory(Util.local_files_path):
+		local_files += item + ";"
+
+	local_list_files = local_files.split(';')
+
+	needed_files = set(received_files) - set(local_list_files)
+
+	for i in needed_files:
+	    str_final += i + ';'
+	print str_final
+	#return str_final
+
 	#Envio
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.connect((TCP_IP, PORT_IP))
-	s.send(MESSAGE)
-	data = s.recv(BUFFER_SIZE)
-	s.close()
+	# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	# s.connect((TCP_IP, PORT_IP))
+	# s.send(str_final)
+	# data = s.recv(BUFFER_SIZE)
+	# s.close()
+
+	global state
+	state = "final"
 	#return message
 
 #Mensagem 2
@@ -64,7 +90,7 @@ def send_files_list(TCP_IP, PORT_IP):
 
 #Servidor Mensagem
 def server_listen(TCP_PORT, TCP_IP):
-
+	global data_teste
 	BUFFER_SIZE = 1024  # Normally 1024, but we want fast response
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -78,10 +104,11 @@ def server_listen(TCP_PORT, TCP_IP):
 	    data = conn.recv(BUFFER_SIZE)
 	    if not data: break
 	    print "received data:", data
+	    data_teste = data
 	    conn.send(data)  # echo
 	conn.close()
 	global state
-	state = "sendlist"
+	state = "get_file_list"
 
 
 def get_ip():
@@ -102,10 +129,15 @@ try :
 			t.join()
 			print "Loop"
 		if state == "sendlist":
-			t = threading.Thread(name='sendlist', target=send_files_list, args=  (60000, '10.0.0.102'))
+			t = threading.Thread(name='sendlist', target=send_files_list, args=  (60000, '10.0.0.101'))
 			t.start()
 			t.join()
 			print("Lista")
+
+		if state == "get_file_list":
+			t = threading.Thread(name='get_file_list', target=server_files_list_request, args=  (60000, '10.0.0.101'))
+			t.start()
+			t.join()
 
 		if state == "final":
 			break
