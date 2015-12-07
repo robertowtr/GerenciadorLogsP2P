@@ -41,13 +41,18 @@ def server_listen(TCP_PORT, TCP_IP):
 		data = conn.recv(BUFFER_SIZE)
     		if not data: break
     		print "received data:",  data
-    		conn.send(data)  # echo
+    		dados = data
+    		#conn.send(data)  # echo
+    		type(dados)
 	conn.close()
-	return str(data)
+	return str(dados)
 
 
-TCP_IP = '10.0.0.103'
+TCP_IP = '10.0.0.101'
 TCP_PORT = 60000
 BUFFER_SIZE = 1024
 tx = server_listen(TCP_PORT, TCP_IP)
-decode_file(tx, "teste.txt")
+print "TX: " + tx
+stringdata = tx.decode('utf-8')
+
+decode_file(stringdata, "teste.txt")
