@@ -129,18 +129,24 @@ def output_file(out_info, out_name):
   arq_out.write(out_info)
   arq_out.close()
 
- def encode_file(nome_arq):
- 	datainput = binascii.rlecode_hqx(input_file(nome_arq))
- 	return datainput
+def encode_file(nome_arq):
+	datainput = binascii.rlecode_hqx(input_file(nome_arq))
+	return datainput
 
- def decode_file(nome_arq):
- 	dataoutput = binascii.rledecode_hqx(output_file(nome_arq))
- 	return dataoutput
+def decode_file(nome_arq):
+	dataoutput = binascii.rledecode_hqx(output_file(nome_arq))
+	return dataoutput
 
 
 
 try :
 	iplocal = str(get_ip())
+	print "Ouvindo broadcast"
+
+	t = threading.Thread(name='ouvindoinicio', target= listen)
+	t.start()
+	t.join()
+
 	state = "inicial"		#Variável state indica qual estado se encontra o programa
 	while  1:
 		print state

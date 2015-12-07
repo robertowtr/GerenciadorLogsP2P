@@ -26,8 +26,8 @@ def decode_file(nome_arq):
 	return dataoutput
 
 
-TCP_IP = '10.0.0.103'
-TCP_PORT = 60000
+TCP_IP = '10.0.0.101'
+TCP_PORT = 50000
 BUFFER_SIZE = 4096
 #MESSAGE = "Mensagaem De Texto"
 

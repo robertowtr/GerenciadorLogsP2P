@@ -21,9 +21,5 @@ s.bind(('', 50000))
 
 while 1:
     print "Ouvindo conexao"
-    data, addr = s.recvfrom(64)
+    data, addr = s.recvfrom(5000)
     print "Recebido %s" % data
-
-
-
-

@@ -29,8 +29,11 @@ s = socket(AF_INET, SOCK_DGRAM)
 s.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
 while 1:
-    print send_files_list()
-    print "%s-%s-%s %s:%s:%s\tEnviando broadcast..." % localtime()[:6]
-    data = repr(time()) + '\n'
+    data_input = send_files_list()
+#    print "%s-%s-%s %s:%s:%s\tEnviando broadcast..." % str(send_files_list()) #localtime()[:6]
+    #print "%s\tEnviando broadcast..." % data_input #localtime()[:6]
+
+    data = str(data_input) #repr(time()) + '\n'
+    print data
     s.sendto(data, ('<broadcast>', 50000))
     sleep(1)
