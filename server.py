@@ -34,6 +34,6 @@ while 1:
     #print "%s\tEnviando broadcast..." % data_input #localtime()[:6]
 
     data = str(data_input) #repr(time()) + '\n'
-    print data
+    print "Enviando"
     s.sendto(data, ('<broadcast>', 50000))
     sleep(1)
